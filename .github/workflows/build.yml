@@ -20,3 +20,16 @@ jobs:
       run: |
         npm install
         npm run build
+
+    - name: setup aliyun oss
+      run: | 
+        sudo wget http://gosspublic.alicdn.com/ossutil/1.7.8/ossutil32 
+        pwd
+        ls -l
+        sudo chmod 755 ossutil32
+        echo ${{ secrets.OSS_KEY_ID }}
+        echo ${{ secrets.OSS_KEY_SECRET }}
+        ./ossutil32 config -e oss-cn-beijing.aliyuncs.com -i ${{ secrets.OSS_KEY_ID }} -k ${{ secrets.OSS_KEY_SECRET }} -L CH 
+
+    - name: cp files to aliyun
+      run: ./ossutil32 cp -rf ./dist oss://wechat-view/element-dist/
